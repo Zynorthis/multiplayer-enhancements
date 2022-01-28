@@ -19,8 +19,8 @@ namespace Multiplayer_Enhancements
     [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(ArtifactAPI), nameof(EliteAPI))]
     public class Main : BaseUnityPlugin
     {
-        public const string ModGuid = "com.MyUsername.MyModName";
-        public const string ModName = "My Mod's Title and if we see this exact name on Thunderstore we will deprecate your mod";
+        public const string ModGuid = "com.Bassic.MultiplayerEnhancements";
+        public const string ModName = "Multiplayer Enchancements";
         public const string ModVer = "0.0.1";
 
         public static AssetBundle MainAssets;
@@ -36,6 +36,7 @@ namespace Multiplayer_Enhancements
         private void Awake()
         {
             ModLogger = Logger;
+            ModLogger.LogInfo("Running Awake...");
 
             // Don't know how to create/use an asset bundle, or don't have a unity project set up?
             // Look here for info on how to set these up: https://github.com/KomradeSpectre/AetheriumMod/blob/rewrite-master/Tutorials/Item%20Mod%20Creation.md#unity-project
@@ -94,6 +95,7 @@ namespace Multiplayer_Enhancements
                 }
             }
 
+            ModLogger.LogInfo($"{nameof(Awake)} Complete.");
         }
 
 
