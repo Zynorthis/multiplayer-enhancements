@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using BepInEx.Logging;
 using RoR2;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Multiplayer_Enhancements.Artifact
     class ExampleArtifact : ArtifactBase<ExampleArtifact>
     {
         public static ConfigEntry<int> TimesToPrintMessageOnStart;
+        private ManualLogSource Logger;
 
         public override string ArtifactName => "Artifact of Example";
 
@@ -19,12 +21,13 @@ namespace Multiplayer_Enhancements.Artifact
 
         public override string ArtifactDescription => "When enabled, print a message to the chat at the start of the run.";
 
-        public override Sprite ArtifactEnabledIcon => MainAssets.LoadAsset<Sprite>("ExampleArtifactEnabledIcon.png");
+        public override Sprite ArtifactEnabledIcon => RoR2Content.Artifacts.Swarms.smallIconSelectedSprite;
 
-        public override Sprite ArtifactDisabledIcon => MainAssets.LoadAsset<Sprite>("ExampleArtifactDisabledIcon.png");
+        public override Sprite ArtifactDisabledIcon => RoR2Content.Artifacts.Swarms.smallIconDeselectedSprite;
 
-        public override void Init(ConfigFile config)
+        public override void Init(ConfigFile config, ManualLogSource logger)
         {
+            Logger = logger;
             CreateConfig(config);
             CreateLang();
             CreateArtifact();
@@ -33,6 +36,7 @@ namespace Multiplayer_Enhancements.Artifact
 
         private void CreateConfig(ConfigFile config)
         {
+            Logger.LogInfo($"{nameof(ExampleArtifact)} - Running CreateConfig.");
             TimesToPrintMessageOnStart = config.Bind<int>("Artifact: " + ArtifactName, "Times to Print Message in Chat", 5, "How many times should a message be printed to the chat on run start?");
         }
 
@@ -43,6 +47,7 @@ namespace Multiplayer_Enhancements.Artifact
 
         private void PrintMessageToChat(Run run)
         {
+            Logger.LogInfo($"{nameof(ExampleArtifact)} - Printing Chat Messages...");
             if (NetworkServer.active && ArtifactEnabled)
             {
                 for (int i = 0; i < TimesToPrintMessageOnStart.Value; i++)

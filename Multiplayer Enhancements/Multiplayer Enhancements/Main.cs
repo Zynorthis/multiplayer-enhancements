@@ -21,7 +21,7 @@ namespace Multiplayer_Enhancements
     {
         public const string ModGuid = "com.Bassic.MultiplayerEnhancements";
         public const string ModName = "Multiplayer Enchancements";
-        public const string ModVer = "0.0.1";
+        public const string ModVer = "0.0.5";
 
         public static AssetBundle MainAssets;
 
@@ -41,10 +41,10 @@ namespace Multiplayer_Enhancements
             // Don't know how to create/use an asset bundle, or don't have a unity project set up?
             // Look here for info on how to set these up: https://github.com/KomradeSpectre/AetheriumMod/blob/rewrite-master/Tutorials/Item%20Mod%20Creation.md#unity-project
 
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Multiplayer_Enhancements.my_assetbundlefile"))
-            {
-                MainAssets = AssetBundle.LoadFromStream(stream);
-            }
+            //using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ItemModCreationBoilerplate.my_assetbundlefile"))
+            //{
+            //    MainAssets = AssetBundle.LoadFromStream(stream);
+            //}
 
             //This section automatically scans the project for all artifacts
             var ArtifactTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ArtifactBase)));
@@ -54,46 +54,46 @@ namespace Multiplayer_Enhancements
                 ArtifactBase artifact = (ArtifactBase)Activator.CreateInstance(artifactType);
                 if (ValidateArtifact(artifact, Artifacts))
                 {
-                    artifact.Init(Config);
+                    artifact.Init(Config, ModLogger);
                 }
             }
 
             //This section automatically scans the project for all items
-            var ItemTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ItemBase)));
+            //var ItemTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ItemBase)));
 
-            foreach (var itemType in ItemTypes)
-            {
-                ItemBase item = (ItemBase)System.Activator.CreateInstance(itemType);
-                if (ValidateItem(item, Items))
-                {
-                    item.Init(Config);
-                }
-            }
+            //foreach (var itemType in ItemTypes)
+            //{
+            //    ItemBase item = (ItemBase)System.Activator.CreateInstance(itemType);
+            //    if (ValidateItem(item, Items))
+            //    {
+            //        item.Init(Config);
+            //    }
+            //}
 
-            //this section automatically scans the project for all equipment
-            var EquipmentTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(EquipmentBase)));
+            ////this section automatically scans the project for all equipment
+            //var EquipmentTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(EquipmentBase)));
 
-            foreach (var equipmentType in EquipmentTypes)
-            {
-                EquipmentBase equipment = (EquipmentBase)System.Activator.CreateInstance(equipmentType);
-                if (ValidateEquipment(equipment, Equipments))
-                {
-                    equipment.Init(Config);
-                }
-            }
+            //foreach (var equipmentType in EquipmentTypes)
+            //{
+            //    EquipmentBase equipment = (EquipmentBase)System.Activator.CreateInstance(equipmentType);
+            //    if (ValidateEquipment(equipment, Equipments))
+            //    {
+            //        equipment.Init(Config);
+            //    }
+            //}
 
-            //this section automatically scans the project for all elite equipment
-            var EliteEquipmentTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(EliteEquipmentBase)));
+            ////this section automatically scans the project for all elite equipment
+            //var EliteEquipmentTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(EliteEquipmentBase)));
 
-            foreach (var eliteEquipmentType in EliteEquipmentTypes)
-            {
-                EliteEquipmentBase eliteEquipment = (EliteEquipmentBase)System.Activator.CreateInstance(eliteEquipmentType);
-                if (ValidateEliteEquipment(eliteEquipment, EliteEquipments))
-                {
-                    eliteEquipment.Init(Config);
+            //foreach (var eliteEquipmentType in EliteEquipmentTypes)
+            //{
+            //    EliteEquipmentBase eliteEquipment = (EliteEquipmentBase)System.Activator.CreateInstance(eliteEquipmentType);
+            //    if (ValidateEliteEquipment(eliteEquipment, EliteEquipments))
+            //    {
+            //        eliteEquipment.Init(Config);
 
-                }
-            }
+            //    }
+            //}
 
             ModLogger.LogInfo($"{nameof(Awake)} Complete.");
         }

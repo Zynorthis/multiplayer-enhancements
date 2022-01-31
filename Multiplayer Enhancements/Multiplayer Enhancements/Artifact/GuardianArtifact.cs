@@ -7,14 +7,15 @@ using UnityEngine;
 using UnityEngine.Networking;
 using R2API.Networking;
 using static Multiplayer_Enhancements.Main;
+using BepInEx.Logging;
 
 namespace Multiplayer_Enhancements.Artifact
 {
-    public abstract class GuardianArtifact: ArtifactBase<GuardianArtifact>
+    public class GuardianArtifact: ArtifactBase<GuardianArtifact>
     {
-        public static ConfigEntry<int> TimesToPrintMessageOnStart;
-        public PlayersTracker players;
-        public List<CharacterBody> PlayerDeathList; //TODO: Change this from type string to whatever type is used to represent a player.
+        private static ConfigEntry<int> TimesToPrintMessageOnStart;
+        private List<CharacterBody> PlayerDeathList; //TODO: Change this from type string to whatever type is used to represent a player.
+        private ManualLogSource Logger;
 
         public override string ArtifactName => "Artifact of Guardians";
 
@@ -22,11 +23,13 @@ namespace Multiplayer_Enhancements.Artifact
 
         public override string ArtifactDescription => "When enabled, players gain a temporary buff to armour if they died on the previous stage.";
 
-        public override Sprite ArtifactEnabledIcon => MainAssets.LoadAsset<Sprite>("ExampleArtifactEnabledIcon.png");
+        public override Sprite ArtifactEnabledIcon => RoR2Content.Artifacts.Swarms.smallIconSelectedSprite;
 
-        public override Sprite ArtifactDisabledIcon => MainAssets.LoadAsset<Sprite>("ExampleArtifactDisabledIcon.png");
-        public override void Init(ConfigFile config)
+        public override Sprite ArtifactDisabledIcon => RoR2Content.Artifacts.Swarms.smallIconDeselectedSprite;
+        public override void Init(ConfigFile config, ManualLogSource logger)
         {
+            Logger = logger;
+            PlayerDeathList = new List<CharacterBody>();
             CreateConfig(config);
             CreateLang();
             CreateArtifact();
@@ -40,6 +43,7 @@ namespace Multiplayer_Enhancements.Artifact
 
         public override void Hooks()
         {
+            Logger.LogInfo($"Running Hooks Method");
             Run.onRunStartGlobal += PrintMessageToChat;
 
             On.RoR2.GlobalEventManager.OnPlayerCharacterDeath += (orig, self, damageReport, victimNetworkUser) =>
@@ -65,6 +69,7 @@ namespace Multiplayer_Enhancements.Artifact
 
         public void AddPlayerToDeathList(CharacterBody player)
         {
+            Logger.LogInfo($"Checking Player...\n---------\n{player}\n{player.isPlayerControlled}\n{player.name}\n---------");
             if (player == null) return;
             if (!player.isPlayerControlled) return;
 
@@ -73,11 +78,13 @@ namespace Multiplayer_Enhancements.Artifact
 
         public void GivePlayersBuffs()
         {
+            Logger.LogInfo($"Giving Buffs To Players. Current Player Count is: {PlayerDeathList.Count}");
             foreach (var player in PlayerDeathList)
             {
                 player.AddTimedBuff(RoR2Content.Buffs.ArmorBoost, 30000);
             }
             PlayerDeathList.Clear();
+            Logger.LogInfo("Buffs Given, Player Death List Cleared.");
         }
     }
 }

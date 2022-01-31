@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using BepInEx.Logging;
 using R2API;
 using RoR2;
 using System;
@@ -36,7 +37,7 @@ namespace Multiplayer_Enhancements.Artifact
         //For use only after the run has started.
         public bool ArtifactEnabled => RunArtifactManager.instance.IsArtifactEnabled(ArtifactDef);
 
-        public abstract void Init(ConfigFile config);
+        public abstract void Init(ConfigFile config, ManualLogSource logger);
 
         protected void CreateLang()
         {
